@@ -1,16 +1,7 @@
 import time
 import pyautogui
 from github import Github, Auth, GithubException
-import key
-
-
-def get_cloud_platform():
-    print('Choose cloud platform for your clipboard :')
-    print('1. GitHub ')
-    choice = input('Your Choice : ')
-    if choice == '1':
-        auth_token = input('Your github auth token : ')
-        return 'GitHub', auth_token
+import key_manager
 
 
 def copy_paste():
@@ -26,10 +17,9 @@ def copy_paste():
 
 
 app_version = '0.1'
-# cloud_data, token = get_cloud_platform()
-
-
-auth = Auth.Token(key.KEY)
+km = key_manager.KeyManager()
+github_auth_token = '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' #km.get_github_key()
+auth = Auth.Token(github_auth_token)
 g = Github(auth=auth)
 repo = g.get_user().get_repo('clipboard')
 print("Running")
