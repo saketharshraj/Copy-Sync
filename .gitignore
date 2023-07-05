@@ -40,3 +40,6 @@ libs/
 # user generated files
 clipboard.txt
 configs.ini
+
+*.spec
+

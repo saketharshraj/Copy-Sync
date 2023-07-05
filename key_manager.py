@@ -1,6 +1,6 @@
 import info
 from configparser import ConfigParser, NoOptionError, NoSectionError
-
+from github import Github, Auth, BadCredentialsException
 
 class KeyManager:
     def __init__(self):
@@ -13,16 +13,34 @@ class KeyManager:
     def get_github_key(self):
         github_auth_token = ''
         try:
-            github_auth_token = self.config.get(self.CLOUD_TOKEN_SECTION, self.CLOUD_TOKEN_SECTION)
-        except (NoSectionError, NoOptionError):
-            pass
+            github_auth_token = self.config.get(self.CLOUD_TOKEN_SECTION, self.GITHUB_TOKEN_OPTION)
+        except (NoSectionError, NoOptionError) as e:
+            print(e)
 
         if github_auth_token == '':
             self.handle_github_token_input()
         else:
             print('Found your github auth token !!')
-            return github_auth_token
-
+            if (self.check_github_auth_token(github_auth_token)):
+                return github_auth_token
+            return None
+        
+    def check_github_auth_token(self, token):
+        print("Validating Your Token")
+        try:
+            auth = Auth.Token(token)
+            g = Github(auth=auth)
+            repo = g.get_user().get_repo('clipboard')
+            print("Token Looks Sexy")
+            return True
+        except BadCredentialsException:
+            print('Your github auth token is invalid')
+            print('Please enter a valid token')
+            self.handle_github_token_input()
+            print('Run the program again to use the new token')
+        except e:
+            print('[ERROR IN KEY MANAGER]', e)
+            return False
     def handle_github_token_input(self):
         print('You need to enter github auth token')
         res = input('Do you need instructions to get the token (y/n) : ')
