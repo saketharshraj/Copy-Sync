@@ -12,7 +12,7 @@ Open your terminal and execute the following commands:
 
 # Download the binary using wget
 ```bash
-wget https://github.com/saketharshraj/Copy-Sync/releases/download/MAJOR/copy_sync
+wget https://github.com/saketharshraj/Copy-Sync/releases/download/v1.1.0/copy_sync
 ```
 # Make the downloaded file executable
 ```bash
