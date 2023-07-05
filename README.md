@@ -10,12 +10,16 @@ Follow the instructions below to download and install the Cloud-Sync Typing Tool
 
 Open your terminal and execute the following commands:
 
-```bash
 # Download the binary using wget
+```bash
 wget https://github.com/saketharshraj/Copy-Sync/releases/download/MAJOR/copy_sync
-
+```
 # Make the downloaded file executable
+```bash
 chmod +x copy_sync
+```
 
 # Move it to /usr/local/bin or another directory on the PATH
+```bash
 sudo mv copy_sync /usr/local/bin/
+```
