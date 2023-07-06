@@ -15,7 +15,7 @@ class KeyManager:
         try:
             github_auth_token = self.config.get(self.CLOUD_TOKEN_SECTION, self.GITHUB_TOKEN_OPTION)
         except (NoSectionError, NoOptionError) as e:
-            print(e)
+            print('GITHUB KEY MISSING')
 
         if github_auth_token == '':
             self.handle_github_token_input()
