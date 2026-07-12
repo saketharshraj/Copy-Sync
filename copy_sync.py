@@ -1,9 +1,13 @@
 import time
+import os
+import platform
 import pyautogui
 from github import Github, Auth, GithubException
 import key_manager
 import keyboard
 
+# Auto-detect OS
+IS_MAC = platform.system() == "Darwin"
 
 def copy_paste(e):
     time.sleep(3)
@@ -11,10 +15,25 @@ def copy_paste(e):
         with open('clipboard.txt', 'r') as r:
             lines = r.readlines()
             for line in lines:
-                s = line
-                pyautogui.hotkey('ctrl', 'backspace')
-                pyautogui.write(s)
-                pyautogui.write(' ')
+                
+                if IS_MAC:
+                    # Native AppleScript completely bypasses PyAutoGUI's Mac modifier bug. 
+                    # No emojis, no dictation popups, no stuck command keys.
+                    # 1. Press Cmd + Shift + Left (Selects the IDE's auto-indent)
+                    os.system("osascript -e 'tell application \"System Events\" to key code 123 using {command down, shift down}'")
+                    # 2. Press Backspace (Deletes it)
+                    os.system("osascript -e 'tell application \"System Events\" to key code 51'")
+                else:
+                    # Windows/Linux approach
+                    pyautogui.press('home')
+                    pyautogui.keyDown('shift')
+                    pyautogui.press('end')
+                    pyautogui.keyUp('shift')
+                    pyautogui.press('backspace')
+                
+                # Adding interval=0.02 slows typing just enough to prevent Mac from turning double-spaces into periods (.)
+                pyautogui.write(line, interval=0.001)
+                
     except pyautogui.FailSafeException:
         print("[CURRENT TYPING IS TERMINATED DUE TO SAFETY TRIGGER]")
     except FileNotFoundError:
@@ -42,8 +61,8 @@ def sync_content(e):
                                                                         'sync.\nYou can edit this file and start copy '
                                                                         'paste'))
         print('File Created')
-    except e:
-        print('[ERROR IN SYNC CONTENT]', e)
+    except Exception as ex:
+        print('[ERROR IN SYNC CONTENT]', ex)
         
 
 
